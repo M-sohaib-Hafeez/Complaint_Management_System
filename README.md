@@ -27,7 +27,7 @@ ComplaintManagement/
 │       └── util/
 │           ├── PasswordUtil.java
 │           ├── SimpleJSON.java
-│           └── GeneratePassword.java
+│           
 ├── frontend/
 │   ├── index.html          — Student portal (Dashboard, Submit, Track)
 │   ├── Adminlogin.html     — Admin login
@@ -43,8 +43,7 @@ ComplaintManagement/
 │       └── admin.js
 ├── database/
 │   ├── schema.sql          — Full DB schema + tables + views
-│   ├── sample-data.sql
-│   └── backup-script.sql
+│      
 └── pom.xml
 ```
 
