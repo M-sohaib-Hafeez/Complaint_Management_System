@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login — ComplaintHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: var(--bg-base); overflow: hidden; }
+        .login-wrap {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .login-left {
+            background: var(--bg-card);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 60% 60%, rgba(var(--accent-rgb), 0.06) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .login-left-content { position: relative; z-index: 1; max-width: 380px; width: 100%; }
+        .login-brand {
+            display: flex; align-items: center; gap: 0.75rem; margin-bottom: 3rem;
+        }
+        .login-brand-logo {
+            width: 44px; height: 44px;
+            background: var(--accent);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .login-brand-logo svg { width: 24px; height: 24px; stroke: #000; }
+        .login-brand-name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
+        .login-heading { font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1.1; }
+        .login-sub { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2.5rem; }
+        .login-form { display: flex; flex-direction: column; gap: 1.25rem; }
+        .login-error {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: #f87171;
+            padding: 0.875rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            display: none;
+        }
+        .login-error.show { display: block; }
+        .login-back { margin-top: 2rem; text-align: center; }
+        .login-back a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+        .login-back a:hover { color: var(--accent); }
+        .login-right {
+            background: var(--bg-base);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            position: relative;
+        }
+        .login-right-art {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .art-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        .art-block {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            transition: all 0.3s;
+            animation: art-pulse 3s ease-in-out infinite;
+        }
+        .art-block:nth-child(1) { animation-delay: 0s; }
+        .art-block:nth-child(2) { animation-delay: 0.3s; }
+        .art-block:nth-child(3) { animation-delay: 0.6s; }
+        .art-block:nth-child(4) { animation-delay: 0.9s; }
+        .art-block:nth-child(5) { background: var(--accent); color: #000; animation-delay: 1.2s; }
+        .art-block:nth-child(6) { animation-delay: 1.5s; }
+        .art-block:nth-child(7) { animation-delay: 1.8s; }
+        .art-block:nth-child(8) { animation-delay: 2.1s; }
+        .art-block:nth-child(9) { animation-delay: 2.4s; }
+        @keyframes art-pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        .art-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
+        .art-desc { color: var(--text-muted); font-size: 0.875rem; line-height: 1.6; }
+        .pw-wrap { position: relative; }
+        .pw-toggle {
+            position: absolute; right: 1rem; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none; cursor: pointer;
+            color: var(--text-muted); padding: 0.25rem;
+            display: flex; align-items: center;
+        }
+        .pw-toggle:hover { color: var(--text-primary); }
+        .pw-toggle svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }
+        @media (max-width: 768px) {
+            .login-wrap { grid-template-columns: 1fr; }
+            .login-right { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-left">
+        <div class="login-left-content">
+            <div class="login-brand">
+                <div class="login-brand-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                <span class="login-brand-name">ComplaintHub</span>
+            </div>
+
+            <h1 class="login-heading">Admin<br>Access</h1>
+            <p class="login-sub">Sign in to manage and resolve student complaints.</p>
+
+            <div id="login-error" class="login-error"></div>
+
+            <form id="login-form" class="login-form" novalidate>
+                <div class="field-group">
+                    <label class="field-label" for="username">Username</label>
+                    <input class="field-input" type="text" id="username" name="username"
+                           placeholder="Enter username" required autocomplete="username">
+                </div>
+                <div class="field-group">
+                    <label class="field-label" for="password">Password</label>
+                    <div class="pw-wrap">
+                        <input class="field-input" type="password" id="password" name="password"
+                               placeholder="Enter password" required autocomplete="current-password" style="padding-right: 3rem;">
+                        <button type="button" class="pw-toggle" onclick="togglePassword()" aria-label="Toggle password visibility">
+                            <svg id="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="login-btn" style="width:100%; justify-content: center; padding: 1rem;">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="login-back">
+                <a href="index.html">← Back to Student Portal</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-right">
+        <div class="login-right-art">
+            <div class="art-grid">
+                <div class="art-block">PEND</div>
+                <div class="art-block">HIGH</div>
+                <div class="art-block">TECH</div>
+                <div class="art-block">ACAD</div>
+                <div class="art-block">MGMT</div>
+                <div class="art-block">HOST</div>
+                <div class="art-block">RESV</div>
+                <div class="art-block">MED</div>
+                <div class="art-block">LOW</div>
+            </div>
+            <div class="art-title">Complaint Management</div>
+            <div class="art-desc">Efficiently track, prioritize, and resolve student complaints with real-time data and queue management.</div>
+        </div>
+    </div>
+</div>
+
+<div id="loading-overlay" class="loading-overlay" style="display:none;">
+    <div class="spinner-ring"></div>
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:8080';
+
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('eye-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+        } else {
+            input.type = 'password';
+            icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+        }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        const btn = document.getElementById('login-btn');
+        const errEl = document.getElementById('login-error');
+
+        if (!username || !password) {
+            errEl.textContent = 'Please enter both username and password.';
+            errEl.classList.add('show');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Signing in...';
+        errEl.classList.remove('show');
+        document.getElementById('loading-overlay').style.display = 'flex';
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            if (data.success) {
+                localStorage.setItem('adminSession', data.sessionId);
+                localStorage.setItem('adminUser', JSON.stringify(data.admin));
+                window.location.href = 'admin.html';
+            } else {
+                errEl.textContent = data.message || 'Invalid credentials. Please try again.';
+                errEl.classList.add('show');
+            }
+        } catch (error) {
+            errEl.textContent = 'Cannot connect to server. Make sure the backend is running on port 8080.';
+            errEl.classList.add('show');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Sign In';
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+    });
+
+    // Auto-redirect if already logged in
+    window.addEventListener('load', async () => {
+        const sessionId = localStorage.getItem('adminSession');
+        if (!sessionId) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/auth/validate`, {
+                headers: { 'Authorization': `Bearer ${sessionId}` }
+            });
+            const data = await res.json();
+            if (data.success) window.location.href = 'admin.html';
+            else { localStorage.removeItem('adminSession'); localStorage.removeItem('adminUser'); }
+        } catch { localStorage.removeItem('adminSession'); localStorage.removeItem('adminUser'); }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComplaintHub — Student Complaint Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+    <span class="topbar-status">
+        <span class="pulse-dot"></span>
+        System Online
+    </span>
+    <span class="topbar-info">Backend: localhost:8080 &nbsp;|&nbsp; v2.0</span>
+</div>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-brand">
+            <div class="brand-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    <path d="M8 10h8M8 14h5"/>
+                </svg>
+            </div>
+            <div>
+                <span class="brand-title">ComplaintHub</span>
+                <span class="brand-sub">Student Portal</span>
+            </div>
+        </div>
+        <div class="nav-links">
+            <button class="nav-link active" data-page="dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </button>
+            <button class="nav-link" data-page="submit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+                New Complaint
+            </button>
+            <button class="nav-link" data-page="track">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                Track Status
+            </button>
+            <a href="Adminlogin.html" class="nav-link nav-admin">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Admin
+            </a>
+        </div>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- DASHBOARD PAGE -->
+<div id="dashboard-page" class="page active">
+    <div class="container">
+        <div class="page-hero">
+            <div class="page-hero-text">
+                <div class="page-label">OVERVIEW</div>
+                <h1 class="page-title">Complaint Dashboard</h1>
+                <p class="page-subtitle">Real-time view of all student complaints in the system.</p>
+            </div>
+            <button class="btn btn-primary" onclick="refreshDashboard()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                Refresh
+            </button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card" data-type="total">
+                <div class="stat-accent"></div>
+                <div class="stat-inner">
+                    <div class="stat-icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-number" id="stat-total">—</span>
+                        <span class="stat-label">Total Complaints</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card" data-type="pending">
+                <div class="stat-accent"></div>
+                <div class="stat-inner">
+                    <div class="stat-icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-number" id="stat-pending">—</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card" data-type="progress">
+                <div class="stat-accent"></div>
+                <div class="stat-inner">
+                    <div class="stat-icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-number" id="stat-progress">—</span>
+                        <span class="stat-label">In Progress</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card" data-type="resolved">
+                <div class="stat-accent"></div>
+                <div class="stat-inner">
+                    <div class="stat-icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+                    </div>
+                    <div class="stat-data">
+                        <span class="stat-number" id="stat-resolved">—</span>
+                        <span class="stat-label">Resolved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complaints Table -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2 class="panel-title">All Complaints</h2>
+                <div class="panel-meta" id="complaint-count-badge"></div>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table" id="complaints-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody id="complaints-table-body">
+                        <tr><td colspan="7" class="table-loading">Loading complaints...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SUBMIT COMPLAINT PAGE -->
+<div id="submit-page" class="page">
+    <div class="container">
+        <div class="page-hero">
+            <div class="page-hero-text">
+                <div class="page-label">NEW COMPLAINT</div>
+                <h1 class="page-title">Submit a Complaint</h1>
+                <p class="page-subtitle">Fill in all required fields. High priority complaints are processed first.</p>
+            </div>
+        </div>
+
+        <div class="form-card" id="complaint-form-wrap">
+            <form id="complaint-form" novalidate>
+                <div class="form-block">
+                    <div class="form-block-label">
+                        <span class="form-block-num">01</span>
+                        Student Information
+                    </div>
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label" for="studentName">Full Name <span class="req">*</span></label>
+                            <input class="field-input" type="text" id="studentName" name="studentName" placeholder="e.g. Ahmed Ali" required>
+                            <span class="field-error" id="err-studentName"></span>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="email">
+                                Email Address <span class="req">*</span>
+                                <span class="field-hint">Format: rollno@students.university.edu.pk</span>
+                            </label>
+                            <input class="field-input" type="email" id="email" name="email"
+                                   placeholder="24F-CS-085@students.duet.edu.pk" required>
+                            <span class="field-error" id="err-email"></span>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="department">Department <span class="req">*</span></label>
+                            <select class="field-input field-select" id="department" name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Electrical Engineering">Electrical Engineering</option>
+                                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                <option value="Civil Engineering">Civil Engineering</option>
+                                <option value="Business Administration">Business Administration</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                            </select>
+                            <span class="field-error" id="err-department"></span>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="semester">Semester <span class="req">*</span></label>
+                            <select class="field-input field-select" id="semester" name="semester" required>
+                                <option value="">Select Semester</option>
+                                <option value="1">1st Semester</option>
+                                <option value="2">2nd Semester</option>
+                                <option value="3">3rd Semester</option>
+                                <option value="4">4th Semester</option>
+                                <option value="5">5th Semester</option>
+                                <option value="6">6th Semester</option>
+                                <option value="7">7th Semester</option>
+                                <option value="8">8th Semester</option>
+                            </select>
+                            <span class="field-error" id="err-semester"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-block">
+                    <div class="form-block-label">
+                        <span class="form-block-num">02</span>
+                        Complaint Details
+                    </div>
+                    <div class="form-grid">
+                        <div class="field-group field-full">
+                            <label class="field-label" for="title">Complaint Title <span class="req">*</span></label>
+                            <input class="field-input" type="text" id="title" name="title" placeholder="Brief summary of the issue" required>
+                            <span class="field-error" id="err-title"></span>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="category">Category <span class="req">*</span></label>
+                            <select class="field-input field-select" id="category" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Technical">Technical Issues</option>
+                                <option value="Academic">Academic</option>
+                                <option value="Hostel">Hostel Facilities</option>
+                                <option value="Library">Library Services</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Cafeteria">Cafeteria</option>
+                                <option value="Administration">Administration</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <span class="field-error" id="err-category"></span>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="priority">Priority Level <span class="req">*</span></label>
+                            <div class="priority-selector" id="priority-selector">
+                                <label class="priority-opt" data-value="LOW">
+                                    <input type="radio" name="priority" value="LOW">
+                                    <span class="priority-pill low">Low</span>
+                                </label>
+                                <label class="priority-opt" data-value="MEDIUM">
+                                    <input type="radio" name="priority" value="MEDIUM" checked>
+                                    <span class="priority-pill medium">Medium</span>
+                                </label>
+                                <label class="priority-opt selected" data-value="HIGH">
+                                    <input type="radio" name="priority" value="HIGH">
+                                    <span class="priority-pill high">High</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field-group field-full">
+                            <label class="field-label" for="description">
+                                Detailed Description <span class="req">*</span>
+                                <span class="char-count" id="desc-count">0 / 1000</span>
+                            </label>
+                            <textarea class="field-input field-textarea" id="description" name="description"
+                                      placeholder="Describe the issue in detail — when it occurred, how it affects you, and what you've already tried..." required maxlength="1000"></textarea>
+                            <span class="field-error" id="err-description"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-ghost" onclick="resetComplaintForm()">Clear Form</button>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+                        Submit Complaint
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success State -->
+        <div class="success-card" id="submission-success" style="display:none;">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+            </div>
+            <h2 class="success-title">Complaint Submitted!</h2>
+            <p class="success-msg">Your complaint has been registered successfully.</p>
+            <div class="success-id-box">
+                Complaint ID: <strong id="submitted-id">—</strong>
+            </div>
+            <p class="success-hint">Save this ID to track your complaint status.</p>
+            <div class="success-actions">
+                <button class="btn btn-ghost" onclick="hideSuccessMessage()">Submit Another</button>
+                <button class="btn btn-primary" onclick="switchPage('track')">Track Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TRACK STATUS PAGE -->
+<div id="track-page" class="page">
+    <div class="container">
+        <div class="page-hero">
+            <div class="page-hero-text">
+                <div class="page-label">TRACK</div>
+                <h1 class="page-title">Complaint Status</h1>
+                <p class="page-subtitle">Enter your Complaint ID to view the current status and details.</p>
+            </div>
+        </div>
+
+        <div class="track-search-card">
+            <form id="track-form">
+                <div class="track-input-row">
+                    <div class="field-group" style="flex:1">
+                        <label class="field-label" for="track-id">Complaint ID</label>
+                        <input class="field-input" type="text" id="track-id" name="track-id"
+                               placeholder="e.g. 1042" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary track-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        Track
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="complaint-status-details"></div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="loading-overlay" style="display:none;">
+    <div class="spinner-ring"></div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/submit.js"></script>
+<script src="js/track.js"></script>
+</body>
+</html>
